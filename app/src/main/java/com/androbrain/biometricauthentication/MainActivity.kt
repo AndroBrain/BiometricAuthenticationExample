@@ -57,14 +57,20 @@ class MainActivity : FragmentActivity() {
             }
 
             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
-                // Biometric features hardware is missing
+                Toast.makeText(this, "Biometric hardware is missing", Toast.LENGTH_SHORT).show()
             }
 
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
-                // Biometric features are currently unavailable.
+                Toast.makeText(this, "Biometric is currently unavailable", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                Toast.makeText(
+                    this,
+                    "Enrolling in biometrics that your app accepts",
+                    Toast.LENGTH_SHORT,
+                ).show()
                 // The user didn't enroll in biometrics that your app accepts, prompt them to enroll in it
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     val enrollIntent =
@@ -84,19 +90,20 @@ class MainActivity : FragmentActivity() {
         val callback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(this@MainActivity, "AuthenticationError $errorCode $errString", Toast.LENGTH_SHORT).show()
                 if (errorCode == BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                    // If you've added negative button to prompt dialog
+                    Toast.makeText(this@MainActivity, "Negative button pressed", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
-                // Failure with unknown reason
+                Toast.makeText(this@MainActivity, "Unknown authentication error", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                // Authenticated successfully!
                 Toast.makeText(
                     this@MainActivity,
                     "Authenticated with biometrics successfully",
